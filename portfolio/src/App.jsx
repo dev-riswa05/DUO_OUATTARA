@@ -26,16 +26,16 @@ const App = () => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     
-    // Injection sécurisée de Tailwind via CDN pour le rendu immédiat
-    const script = document.createElement('script');
-    script.src = "https://cdn.tailwindcss.com";
-    document.head.appendChild(script);
+    // Charge Tailwind CSS via CDN pour garantir les styles
+    if (!document.querySelector('script[src*="tailwindcss"]')) {
+      const script = document.createElement('script');
+      script.src = "https://cdn.tailwindcss.com";
+      script.async = true;
+      document.head.appendChild(script);
+    }
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
     };
   }, []);
 
@@ -132,12 +132,7 @@ const App = () => {
             <p className="text-xl md:text-2xl text-slate-400 max-w-2xl font-light leading-relaxed mb-12 border-l-2 border-white/10 pl-8">
               L'alliance stratégique de deux experts pour vos projets les plus ambitieux. Développement web d'avant-garde et infrastructures systèmes de pointe.
             </p>
-            <div className="flex flex-wrap gap-6">
-               <a href="#contact" className="group flex items-center gap-4 px-8 py-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all">
-                  <span className="text-xs font-black uppercase tracking-widest text-white">Démarrer un projet</span>
-                  <ArrowRight size={18} className="text-cyan-400 group-hover:translate-x-2 transition-transform" />
-               </a>
-            </div>
+
           </div>
         </section>
 

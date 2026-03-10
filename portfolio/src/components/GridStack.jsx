@@ -133,7 +133,7 @@ const TeamStack = () => {
 
       {/* Légende optionnelle pour mobile */}
       <div className="mt-6 text-center text-[8px] sm:text-[10px] text-slate-400 dark:text-slate-600 px-4">
-        <span className="inline-block sm:hidden">✦ Glissez pour voir plus ✦</span>
+        
         
       </div>
     </section>

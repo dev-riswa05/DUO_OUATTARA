@@ -1,13 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import GridStack from './GridStack';
 import { motion } from "framer-motion";
 import emailjs from '@emailjs/browser';
+
 
 const Page = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const form = useRef();
 
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    // Remplace ces IDs par ceux de ton compte EmailJS
+    const SERVICE_ID = "service_c5m9k2u";
+    const TEMPLATE_ID = "template_taysonj";
+    const PUBLIC_KEY = "y_m3LUvdRamRXkb3I";
+
+    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
+      .then((result) => {
+          console.log(result.text);
+          alert("Message envoyé avec succès !");
+          form.current.reset(); // Vide le formulaire après envoi
+      }, (error) => {
+          console.log(error.text);
+          alert("Une erreur est survenue, veuillez réessayer.");
+      });
+  };
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -539,34 +559,52 @@ const Page = () => {
               >
                 <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-primary/5 rounded-full -mr-12 sm:-mr-16 -mt-12 sm:-mt-16" />
                 
-                <form className="space-y-4 sm:space-y-5 relative z-10">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                    <div className="space-y-1 sm:space-y-2">
-                      <label className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Nom complet</label>
-                      <input type="text" placeholder="Ex: Jean Marc" className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary/50 transition-all" />
-                    </div>
-                    <div className="space-y-1 sm:space-y-2">
-                      <label className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Email</label>
-                      <input type="email" placeholder="votre@email.com" className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary/50 transition-all" />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-1 sm:space-y-2">
-                    <label className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Votre projet en quelques mots</label>
-                    <textarea placeholder="Décrivez vos besoins..." className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 dark:text-white h-24 sm:h-32 outline-none focus:ring-2 focus:ring-primary/50 resize-none transition-all text-sm"></textarea>
-                  </div>
+                <form ref={form} onSubmit={sendEmail} className="space-y-4 sm:space-y-5 relative z-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+        <div className="space-y-1 sm:space-y-2">
+          <label className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Nom complet</label>
+          <input 
+            type="text" 
+            name="user_name" // TRÈS IMPORTANT pour EmailJS
+            required 
+            placeholder="Ex: Jean Marc" 
+            className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary/50 transition-all" 
+          />
+        </div>
+        <div className="space-y-1 sm:space-y-2">
+          <label className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Email</label>
+          <input 
+            type="email" 
+            name="user_email" // TRÈS IMPORTANT
+            required 
+            placeholder="votre@email.com" 
+            className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary/50 transition-all" 
+          />
+        </div>
+      </div>
+      
+      <div className="space-y-1 sm:space-y-2">
+        <label className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Votre projet en quelques mots</label>
+        <textarea 
+          name="message" // TRÈS IMPORTANT
+          required 
+          placeholder="Décrivez vos besoins..." 
+          className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 dark:text-white h-24 sm:h-32 outline-none focus:ring-2 focus:ring-primary/50 resize-none transition-all text-sm"
+        ></textarea>
+      </div>
 
-                  <motion.button 
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 sm:py-4 rounded-lg sm:rounded-xl shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-1 sm:gap-2 group text-sm sm:text-base"
-                  >
-                    Envoyer la demande
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </motion.button>
-                </form>
+      <motion.button 
+        type="submit"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 sm:py-4 rounded-lg sm:rounded-xl shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-1 sm:gap-2 group text-sm sm:text-base"
+      >
+        Envoyer la demande
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </motion.button>
+    </form>
               </motion.div>
             </motion.div>
           </section>
